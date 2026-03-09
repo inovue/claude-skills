@@ -19,7 +19,24 @@ Also check `.claude/settings.json` and `.claude/settings.local.json`. If `custom
 
 Record the discovered file structure — this determines output structure.
 
-### Step 2: Ask About Preserved Sections
+### Step 2: Select Target Files
+
+Present the discovered CLAUDE.md files as a numbered list and ask the user which to regenerate:
+
+> "Found the following CLAUDE.md files:
+> 1. `./CLAUDE.md`
+> 2. `apps/web/CLAUDE.md`
+> 3. `packages/shared/CLAUDE.md`
+>
+> Which files do you want to regenerate? (all / numbers e.g. 1,3 / paths)"
+
+- If only one CLAUDE.md exists (or none), skip this step and proceed with that file (or create `./CLAUDE.md`).
+- If the user already specified target files in their original request, skip this step.
+- "all" regenerates every discovered file.
+
+Only selected files proceed through the remaining steps. Non-selected files are left untouched.
+
+### Step 3: Ask About Preserved Sections
 
 If the user explicitly said "regenerate everything" or "from scratch" with no caveats, skip this step. Otherwise, ask:
 
@@ -27,7 +44,7 @@ If the user explicitly said "regenerate everything" or "from scratch" with no ca
 
 If yes, read and extract those sections verbatim for reinsertion.
 
-### Step 3: Explore Codebase
+### Step 4: Explore Codebase
 
 **Detect repository type** from root config files:
 
@@ -64,9 +81,9 @@ Each subagent should return a structured markdown report covering:
 - Commands (build, test, dev, deploy, lint)
 - Non-obvious gotchas
 
-### Step 4: Regenerate CLAUDE.md Files
+### Step 5: Regenerate CLAUDE.md Files
 
-Match the existing file structure discovered in Step 1. If no CLAUDE.md exists, create a single `./CLAUDE.md`.
+Match the selected files from Step 2. If no CLAUDE.md exists, create a single `./CLAUDE.md`.
 
 When multiple subagents report on the same topic, cross-reference their findings. If reports conflict (e.g., one finds Jest, another finds Vitest), check the actual config files and dependencies to determine which is current.
 
@@ -144,9 +161,9 @@ src/
 - Mock pattern: `vi.mock('../services/foo')` at top of test file
 ```
 
-### Step 5: Quality Check
+### Step 6: Quality Check
 
-If `claude-md-management:claude-md-improver` skill is available, invoke it to score each file, identify gaps, and apply targeted fixes. If unavailable, skip this step — the content guidelines in Step 4 are sufficient to produce quality output.
+If `claude-md-management:claude-md-improver` skill is available, invoke it to score each file, identify gaps, and apply targeted fixes. If unavailable, skip this step — the content guidelines in Step 5 are sufficient to produce quality output.
 
 ## Common Mistakes
 
@@ -159,4 +176,4 @@ If `claude-md-management:claude-md-improver` skill is available, invoke it to sc
 | Documenting every file | Noise dilutes the important signals | Focus on entry points, patterns, and non-obvious structure |
 | Skipping the exploration step | You'll hallucinate outdated architecture | Parallel subagents ground content in actual code |
 | Copying README.md content verbatim | Creates duplication that goes stale independently | Complement README with Claude-specific angles instead |
-| Skipping Step 2 when user said "regenerate" | "Regenerate" may still imply preserving workflow sections | Confirm scope if ambiguous |
+| Skipping Step 3 when user said "regenerate" | "Regenerate" may still imply preserving workflow sections | Confirm scope if ambiguous |
