@@ -1,0 +1,22 @@
+{
+  "name": "inovue-claude-skills",
+  "owner": {
+    "name": "inovue"
+  },
+  "metadata": {
+    "description": "Personal collection of Claude Code skills by inovue"
+  },
+  "plugins": [
+    {
+      "name": "claude-skills",
+      "source": ".",
+      "description": "Personal collection of Claude Code skills by inovue",
+      "version": "1.0.0",
+      "author": {
+        "name": "inovue"
+      },
+      "license": "MIT",
+      "keywords": ["claude-code", "skills", "automation"]
+    }
+  ]
+}
